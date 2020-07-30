@@ -3,6 +3,8 @@ import { View, Image, Text, TouchableOpacity } from 'react-native';
 
 import { Container, Card, Status } from './styles';
 
+import PropTypes from 'prop-types';
+
 import ProgressBar from '../ProgressBar';
 
 import add from '../../assets/img/ACTIONS/add1_nor.png';
@@ -16,18 +18,18 @@ const pessoaVez = true;
 const base64 =
   '/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEABsbGxscGx4hIR4qLSgtKj04MzM4PV1CR0JHQl2NWGdYWGdYjX2Xe3N7l33gsJycsOD/2c7Z//////////////8BGxsbGxwbHiEhHiotKC0qPTgzMzg9XUJHQkdCXY1YZ1hYZ1iNfZd7c3uXfeCwnJyw4P/Zztn////////////////CABEIAEgARwMBIgACEQEDEQH/xAAtAAADAQEBAAAAAAAAAAAAAAAAAQIDBAYBAQEBAAAAAAAAAAAAAAAAAAABAv/aAAwDAQACEAMQAAAA9NiQCRVOQu8nG5IYpqpaYOZNXlZoIMi0SDMo6COfZ2WATPTzCApuWNqizQjlkMx2GioFvQAAP//EACAQAQADAAICAgMAAAAAAAAAAAEAAhEDEBIgEzEhMFH/2gAIAQEAAT8AXI3XrZs8meTK36u650+1GPuQcentSprK8tbm1dJ5wd6vpVyGtTsG1UtK8VeOnjSAhk49h65MnhAyV+5Yx/RQnJTSInsGwMny2tb8VTJbks2+rStrljRZarv1PF/kKWhxwA6//8QAGhEAAQUBAAAAAAAAAAAAAAAAAQIRICIxQP/aAAgBAgEBPwDkAsovsf/EABkRAAIDAQAAAAAAAAAAAAAAAAERACAhQP/aAAgBAwEBPwDkLQ2Cn//Z';
 
-function Perfil({ perfil, position, cash /* onPress */ }) {
+function Perfil({ perfil, position, cash, nick, onPress }) {
   // const pressionar = onPress;
   function press() {
     console.log('Pressionado');
   }
   switch (perfil) {
-    case 'empty':
+    case undefined:
       switch (position) {
         case 1:
           return (
             <Container position="absolute" bottom="0%" alignSelf="center">
-              <TouchableOpacity onPress={() => press()}>
+              <TouchableOpacity onPress={() => onPress()}>
                 <Image
                   source={add}
                   style={{ width: 64, height: 64, borderRadius: 32 }}
@@ -127,7 +129,7 @@ function Perfil({ perfil, position, cash /* onPress */ }) {
           return <View />;
       }
 
-    case true:
+    case perfil:
       switch (position) {
         case 1:
           return (
@@ -154,10 +156,10 @@ function Perfil({ perfil, position, cash /* onPress */ }) {
               <ProgressBar porc="45" />
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>Simão</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.nick}</Text>
                 </View>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>{cash}</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.fichas}</Text>
                 </View>
               </Card>
             </Container>
@@ -185,10 +187,10 @@ function Perfil({ perfil, position, cash /* onPress */ }) {
               <ProgressBar porc="45" />
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>Simão</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.nick}</Text>
                 </View>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>{cash}</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.fichas}</Text>
                 </View>
               </Card>
             </Container>
@@ -216,10 +218,10 @@ function Perfil({ perfil, position, cash /* onPress */ }) {
               <ProgressBar porc="45" />
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>Simão</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.nick}</Text>
                 </View>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>{cash}</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.fichas}</Text>
                 </View>
               </Card>
             </Container>
@@ -247,10 +249,10 @@ function Perfil({ perfil, position, cash /* onPress */ }) {
               <ProgressBar porc="45" />
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>Simão</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.nick}</Text>
                 </View>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>{cash}</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.fichas}</Text>
                 </View>
               </Card>
             </Container>
@@ -278,10 +280,10 @@ function Perfil({ perfil, position, cash /* onPress */ }) {
               <ProgressBar porc="45" />
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>Simão</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.nick}</Text>
                 </View>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>{cash}</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.fichas}</Text>
                 </View>
               </Card>
             </Container>
@@ -309,10 +311,10 @@ function Perfil({ perfil, position, cash /* onPress */ }) {
               <ProgressBar porc="45" />
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>Simão</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.nick}</Text>
                 </View>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>{cash}</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.fichas}</Text>
                 </View>
               </Card>
             </Container>
@@ -340,10 +342,10 @@ function Perfil({ perfil, position, cash /* onPress */ }) {
               <ProgressBar porc="45" />
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>Simão</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.nick}</Text>
                 </View>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>{cash}</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.fichas}</Text>
                 </View>
               </Card>
             </Container>
@@ -371,10 +373,10 @@ function Perfil({ perfil, position, cash /* onPress */ }) {
               <ProgressBar porc="45" />
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>Simão</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.nick}</Text>
                 </View>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>{cash}</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.fichas}</Text>
                 </View>
               </Card>
             </Container>
@@ -402,10 +404,10 @@ function Perfil({ perfil, position, cash /* onPress */ }) {
               <ProgressBar porc="45" />
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>Simão</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.nick}</Text>
                 </View>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 10, color: '#fff' }}>{cash}</Text>
+                  <Text style={{ fontSize: 10, color: '#fff' }}>{perfil.fichas}</Text>
                 </View>
               </Card>
             </Container>

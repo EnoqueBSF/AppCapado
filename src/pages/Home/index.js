@@ -1,6 +1,6 @@
 /* eslint-disable no-var */
 /* eslint-disable no-unused-expressions */
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -13,7 +13,7 @@ import {
 // import { useApp } from '../../Contexts/AppContext';
 // import { SERVER_URL } from '../../config';
 import LinearGradient from 'react-native-linear-gradient';
-// import AB from '../../assets/lib/autobahn';
+import AB from '../../assets/lib/autobahn.js';
 
 import { Content } from './styles';
 
@@ -21,7 +21,7 @@ import table from '../../assets/img/ACTIONS/table_no_dealer.png';
 
 // Details
 
-import Deck from '../../components/Deck';
+import Deck   from '../../components/Deck';
 import Perfil from '../../components/Perfil';
 
 import chipBet from '../../assets/img/ACTIONS/chip_bet.png';
@@ -30,41 +30,91 @@ function Home() {
   const [deck, setDeck] = useState([]);
   const [dadosMesa, setDadosMesa] = useState([]);
   const [show, setShow] = useState([]);
-  const [mesas, setMesas] = useState([
-    { id: 157824, stage: 'pronto', deck: 'capado', show: false },
-    { id: 157825, stage: 'pronto', deck: 'capado', show: false },
-  ]);
+  const [mesas, setMesas] = useState([]);
+  const [posicaoMesa, setPosicaoMesa] = useState([]);
+  
+  var session;
+  const sep = String.fromCharCode(30);
+
   const [mesasAtiva, setMesasAtiva] = useState([]);
-  const [cash, setCash] = useState([]);
-  const [mesaAtual, setMesaAtual] = useState([]);
-  const [mesaUsers, setMesaUsers] = useState([
-    {
-      user0: 'empty',
-      user1: 'empty',
-      user2: 'empty',
-      user3: 'empty',
-      user4: 'empty',
-      user5: 'empty',
-      user6: 'empty',
-      user7: 'empty',
-      user8: 'empty',
-      user9: 'empty',
-    },
-    {
-      user0: 'empty',
-      user1: true,
-      user2: 'empty',
-      user3: 'empty',
-      user4: true,
-      user5: 'empty',
-      user6: true,
-      user7: 'empty',
-      user8: 'empty',
-      user9: 'empty',
-    },
-  ]);
+  const [mesaAtual, setMesaAtual]   = useState([]);
+
+  function handlePosicaoMesa(mensagem) {
+    let posicao = [...posicaoMesa]
+    let ativo = false;
+
+    console.log(`Posicao`, posicao)
+    console.log(`Mensagem`, mensagem)
+    if(posicaoMesa.length === 0) {
+      setPosicaoMesa([mensagem])
+    }
+
+    posicaoMesa.map((posMesa, index) => {
+      mensagem.mesa === posMesa.mesa ? ativo = true : false
+      if(ativo){
+        posicao[index] = mensagem
+        setPosicaoMesa(posicao)
+      } else {
+        posicao = [...posicao, mensagem]
+        setPosicaoMesa(posicao)
+      }
+    })
+
+  }
+
+  
+    useEffect(() => {
+    
+        session = new ab.Session('wss://ambot.sgs.bet/websocket_poker', 
+          function(){
+            console.log('ab session connected');
+            subscribe_to('poker');  
+            publish_to('poker','tu é fei jao jao');
+          },function(code,reason){
+            console.log('ab session gone '+code,reason);
+          });
+
+        subscribe_to = function(chan){
+          session.subscribe(chan, function(channel,event){
+            console.log(channel,event);
+            console.log(`-------------------------------`)
+            
+            let mensagem = event.split(sep)
+            mensagem[1] = JSON.parse(mensagem[1])
+            // console.log(`Console > ${event}`)
+            switch(mensagem[0]) {
+              case `mesas`: 
+                setMesas(mensagem[1])
+                break;
+              case `posicaoMesa`:
+                handlePosicaoMesa(mensagem[1])
+                break;
+              default:
+                console.log(mensagem[0])
+            }
+          });
+
+          publish_to = function(chan,msg) {
+            session.publish(chan,msg);   
+          }
+      
+      };    
+
+      setTimeout(function(){
+        publish_to("poker","listarMesas"+sep);
+      },2000);
+    
+    }, []);
+
+    
+    setInterval(function(){
+      publish_to("poker","ping"+sep);
+    },5000);
+
 
   function handlePressShow(mesa, i) {
+    console.log(mesa)
+    publish_to(`poker`, `dadosMesa${sep}${JSON.stringify(mesa)}`)
     const shows = [...show];
     shows[i] = !show[i];
     setShow(shows);
@@ -79,6 +129,28 @@ function Home() {
     active
       ? console.log(`Mesa ${mesa} já está ativa`)
       : setMesasAtiva([...mesasAtiva, mesa]);
+    console.log(show);
+    console.log('mesasAtiva', mesasAtiva);
+  }
+
+  function handlePress(mesa, i) {    // console.log(mesa)
+    var parametros = { mesa: mesa.id };
+
+    publish_to(`poker`, `dadosMesa${sep}${JSON.stringify(parametros)}`)
+    const shows = [...show];
+    shows[i] = !show[i];
+    setShow(shows);
+    setMesaAtual(mesa.id);
+    let ativa;
+    let active = false;
+    mesasAtiva.map((mesaAtiva) => {
+      mesaAtiva === mesa.id ? (ativa = true) : (ativa = false);
+      ativa ? (active = true) : false;
+      return shows;
+    });
+    active
+      ? console.log(`Mesa ${mesa.id} já está ativa`)
+      : setMesasAtiva([...mesasAtiva, mesa.id]);
     console.log(show);
     console.log('mesasAtiva', mesasAtiva);
   }
@@ -163,7 +235,7 @@ function Home() {
           >
             {mesas.map((mesa, index) => (
               <Content
-                onPress={() => handlePressShow(mesa.id, index)}
+                onPress={() => handlePress(mesa, index)}
                 activeOpacity={0.8}
                 key={mesa.id}
               >
@@ -362,8 +434,10 @@ function Home() {
       </SafeAreaView>
 
       {/* Details */}
+
       {mesas.map(
         (mesa, i) =>
+
           show[i] && (
             <SafeAreaView
               style={{
@@ -406,49 +480,48 @@ function Home() {
                 >
                   <View style={{ width: '100%', height: '100%' }}>
                     <Perfil
-                      perfil={mesaUsers[i].user1}
-                      cash={cash}
+                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[1] : undefined}
                       position={1}
-                      onPress={() => console.log('Euu')}
+                      onPress={() => console.log(posicaoMesa)}
                     />
                     <Perfil
-                      perfil={mesaUsers[i].user2}
-                      cash={cash}
+
+                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[2] : undefined}
                       position={2}
                     />
                     <Perfil
-                      perfil={mesaUsers[i].user3}
-                      cash={cash}
+
+                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[3] : undefined}
                       position={3}
                     />
                     <Perfil
-                      perfil={mesaUsers[i].user4}
-                      cash={cash}
+
+                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[4] : undefined}
                       position={4}
                     />
                     <Perfil
-                      perfil={mesaUsers[i].user5}
-                      cash={cash}
+
+                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[5] : undefined}
                       position={5}
                     />
                     <Perfil
-                      perfil={mesaUsers[i].user6}
-                      cash={cash}
+
+                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[6] : undefined}
                       position={6}
                     />
                     <Perfil
-                      perfil={mesaUsers[i].user7}
-                      cash={cash}
+
+                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[7] : undefined}
                       position={7}
                     />
                     <Perfil
-                      perfil={mesaUsers[i].user8}
-                      cash={cash}
+
+                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[8] : undefined}
                       position={8}
                     />
                     <Perfil
-                      perfil={mesaUsers[i].user8}
-                      cash={cash}
+
+                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[9] : undefined}
                       position={9}
                     />
                   </View>
