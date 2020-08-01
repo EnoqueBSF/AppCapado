@@ -1,6 +1,8 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-undef */
 /* eslint-disable no-var */
 /* eslint-disable no-unused-expressions */
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -21,7 +23,7 @@ import table from '../../assets/img/ACTIONS/table_no_dealer.png';
 
 // Details
 
-import Deck   from '../../components/Deck';
+import Deck from '../../components/Deck';
 import Perfil from '../../components/Perfil';
 
 import chipBet from '../../assets/img/ACTIONS/chip_bet.png';
@@ -30,91 +32,94 @@ function Home() {
   const [deck, setDeck] = useState([]);
   const [dadosMesa, setDadosMesa] = useState([]);
   const [show, setShow] = useState([]);
-  const [mesas, setMesas] = useState([]);
+  const [mesas, setMesas] = useState([
+    { id: '195898', stage: 'open', deck: 'capado' },
+  ]);
   const [posicaoMesa, setPosicaoMesa] = useState([]);
-  
+
   var session;
   const sep = String.fromCharCode(30);
 
   const [mesasAtiva, setMesasAtiva] = useState([]);
-  const [mesaAtual, setMesaAtual]   = useState([]);
+  const [mesaAtual, setMesaAtual] = useState([]);
+
+  function handleSentar(position /* , mesa, player */) {
+    console.log(`Olá, irei sentar na posição: ${position}`);
+  }
 
   function handlePosicaoMesa(mensagem) {
-    let posicao = [...posicaoMesa]
+    let posicao = [...posicaoMesa];
     let ativo = false;
 
-    console.log(`Posicao`, posicao)
-    console.log(`Mensagem`, mensagem)
-    if(posicaoMesa.length === 0) {
-      setPosicaoMesa([mensagem])
+    console.log(`Posicao`, posicao);
+    console.log(`Mensagem`, mensagem);
+    if (posicaoMesa.length === 0) {
+      setPosicaoMesa([mensagem]);
     }
 
     posicaoMesa.map((posMesa, index) => {
-      mensagem.mesa === posMesa.mesa ? ativo = true : false
-      if(ativo){
-        posicao[index] = mensagem
-        setPosicaoMesa(posicao)
+      mensagem.mesa === posMesa.mesa ? (ativo = true) : false;
+      if (ativo) {
+        posicao[index] = mensagem;
+        setPosicaoMesa(posicao);
       } else {
-        posicao = [...posicao, mensagem]
-        setPosicaoMesa(posicao)
+        posicao = [...posicao, mensagem];
+        setPosicaoMesa(posicao);
       }
-    })
-
+      return console.log(posMesa);
+    });
   }
 
-  
-    useEffect(() => {
-    
-        session = new ab.Session('wss://ambot.sgs.bet/websocket_poker', 
-          function(){
-            console.log('ab session connected');
-            subscribe_to('poker');  
-            publish_to('poker','tu é fei jao jao');
-          },function(code,reason){
-            console.log('ab session gone '+code,reason);
-          });
+  // useEffect(() => {
+  //   session = new ab.Session(
+  //     'wss://ambot.sgs.bet/websocket_poker',
+  //     function () {
+  //       console.log('ab session connected');
+  //       subscribe_to('poker');
+  //       publish_to('poker', 'tu é fei jao jao');
+  //     },
+  //     function (code, reason) {
+  //       console.log(`ab session gone ${code}`, reason);
+  //     }
+  //   );
 
-        subscribe_to = function(chan){
-          session.subscribe(chan, function(channel,event){
-            console.log(channel,event);
-            console.log(`-------------------------------`)
-            
-            let mensagem = event.split(sep)
-            mensagem[1] = JSON.parse(mensagem[1])
-            // console.log(`Console > ${event}`)
-            switch(mensagem[0]) {
-              case `mesas`: 
-                setMesas(mensagem[1])
-                break;
-              case `posicaoMesa`:
-                handlePosicaoMesa(mensagem[1])
-                break;
-              default:
-                console.log(mensagem[0])
-            }
-          });
+  //   subscribe_to = function (chan) {
+  //     session.subscribe(chan, function (channel, event) {
+  //       console.log(channel, event);
+  //       console.log(`-------------------------------`);
 
-          publish_to = function(chan,msg) {
-            session.publish(chan,msg);   
-          }
-      
-      };    
+  //       const mensagem = event.split(sep);
+  //       mensagem[1] = JSON.parse(mensagem[1]);
+  //       // console.log(`Console > ${event}`)
+  //       switch (mensagem[0]) {
+  //         case `mesas`:
+  //           setMesas(mensagem[1]);
+  //           break;
+  //         case `posicaoMesa`:
+  //           handlePosicaoMesa(mensagem[1]);
+  //           break;
+  //         default:
+  //           console.log(mensagem[0]);
+  //       }
+  //     });
 
-      setTimeout(function(){
-        publish_to("poker","listarMesas"+sep);
-      },2000);
-    
-    }, []);
+  //     publish_to = function (chan, msg) {
+  //       session.publish(chan, msg);
+  //     };
+  //   };
 
-    
-    setInterval(function(){
-      publish_to("poker","ping"+sep);
-    },5000);
+  //   setTimeout(function () {
+  //     publish_to('poker', `listarMesas${sep}`);
+  //   }, 5000);
+  // }, []);
 
+  // setInterval(function () {
+  //   publish_to('poker', `ping${sep}`);
+  // }, 5000);
 
   function handlePressShow(mesa, i) {
-    console.log(mesa)
-    publish_to(`poker`, `dadosMesa${sep}${JSON.stringify(mesa)}`)
+    console.log(mesa);
+    publish_to(`poker`, `dadosMesa${sep}${JSON.stringify(mesa)}`);
     const shows = [...show];
     shows[i] = !show[i];
     setShow(shows);
@@ -133,10 +138,11 @@ function Home() {
     console.log('mesasAtiva', mesasAtiva);
   }
 
-  function handlePress(mesa, i) {    // console.log(mesa)
+  function handlePress(mesa, i) {
+    // console.log(mesa)
     var parametros = { mesa: mesa.id };
 
-    publish_to(`poker`, `dadosMesa${sep}${JSON.stringify(parametros)}`)
+    // publish_to(`poker`, `dadosMesa${sep}${JSON.stringify(parametros)}`);
     const shows = [...show];
     shows[i] = !show[i];
     setShow(shows);
@@ -437,7 +443,6 @@ function Home() {
 
       {mesas.map(
         (mesa, i) =>
-
           show[i] && (
             <SafeAreaView
               style={{
@@ -480,49 +485,85 @@ function Home() {
                 >
                   <View style={{ width: '100%', height: '100%' }}>
                     <Perfil
-                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[1] : undefined}
+                      perfil={
+                        posicaoMesa[i] != null
+                          ? posicaoMesa[i].players[1]
+                          : undefined
+                      }
                       position={1}
-                      onPress={() => console.log(posicaoMesa)}
+                      press={handleSentar}
                     />
                     <Perfil
-
-                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[2] : undefined}
+                      perfil={
+                        posicaoMesa[i] != null
+                          ? posicaoMesa[i].players[2]
+                          : undefined
+                      }
                       position={2}
+                      press={handleSentar}
                     />
                     <Perfil
-
-                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[3] : undefined}
+                      perfil={
+                        posicaoMesa[i] != null
+                          ? posicaoMesa[i].players[3]
+                          : undefined
+                      }
                       position={3}
+                      press={handleSentar}
                     />
                     <Perfil
-
-                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[4] : undefined}
+                      perfil={
+                        posicaoMesa[i] != null
+                          ? posicaoMesa[i].players[4]
+                          : undefined
+                      }
                       position={4}
+                      press={handleSentar}
                     />
                     <Perfil
-
-                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[5] : undefined}
+                      perfil={
+                        posicaoMesa[i] != null
+                          ? posicaoMesa[i].players[5]
+                          : undefined
+                      }
                       position={5}
+                      press={handleSentar}
                     />
                     <Perfil
-
-                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[6] : undefined}
+                      perfil={
+                        posicaoMesa[i] != null
+                          ? posicaoMesa[i].players[6]
+                          : undefined
+                      }
                       position={6}
+                      press={handleSentar}
                     />
                     <Perfil
-
-                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[7] : undefined}
+                      perfil={
+                        posicaoMesa[i] != null
+                          ? posicaoMesa[i].players[7]
+                          : undefined
+                      }
                       position={7}
+                      press={handleSentar}
                     />
                     <Perfil
-
-                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[8] : undefined}
+                      perfil={
+                        posicaoMesa[i] != null
+                          ? posicaoMesa[i].players[8]
+                          : undefined
+                      }
                       position={8}
+                      press={handleSentar}
                     />
                     <Perfil
-
-                      perfil={posicaoMesa[i] != null ? posicaoMesa[i].players[9] : undefined}
+                      perfil={
+                        posicaoMesa[i] != null
+                          ? posicaoMesa[i].players[9]
+                          : undefined
+                      }
                       position={9}
+                      press={handleSentar}
                     />
                   </View>
                 </View>
