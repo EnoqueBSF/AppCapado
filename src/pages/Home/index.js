@@ -32,9 +32,7 @@ function Home() {
   const [deck, setDeck] = useState([]);
   const [dadosMesa, setDadosMesa] = useState([]);
   const [show, setShow] = useState([]);
-  const [mesas, setMesas] = useState([
-    { id: '195898', stage: 'open', deck: 'capado' },
-  ]);
+  const [mesas, setMesas] = useState([]);
   const [posicaoMesa, setPosicaoMesa] = useState([]);
 
   var session;
@@ -106,7 +104,7 @@ function Home() {
 
     setTimeout(function () {
       publish_to('poker', `listarMesas${sep}`);
-    }, 5000);
+    }, 1000);
   }, []);
 
   setInterval(function () {
@@ -117,7 +115,7 @@ function Home() {
   const fichas = 1500;
 
   function handleSentar(position, mesa) {
-    const params = { mesa, nick: nome, fichas, position };
+    const params = { mesa: mesa.id, nick: nome, fichas, position };
     publish_to('poker', `entrar${sep}${JSON.stringify(params)}`);
     console.log(`Entrei na mesa: ${mesa.id}`);
   }
@@ -147,7 +145,7 @@ function Home() {
     // console.log(mesa)
     var parametros = { mesa: mesa.id };
 
-    // publish_to(`poker`, `dadosMesa${sep}${JSON.stringify(parametros)}`);
+    publish_to(`poker`, `dadosMesa${sep}${JSON.stringify(parametros)}`);
     const shows = [...show];
     shows[i] = !show[i];
     setShow(shows);
