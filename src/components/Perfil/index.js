@@ -152,7 +152,7 @@ function Perfil({ perfil, position, press, mesa }) {
                   }}
                 />
               )}
-              <ProgressBar porc="45" />
+              {/* <ProgressBar porc="45" /> */}
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
                   <Text style={{ fontSize: 10, color: '#fff' }}>
@@ -187,7 +187,7 @@ function Perfil({ perfil, position, press, mesa }) {
                   }}
                 />
               )}
-              <ProgressBar porc="45" />
+              {/* <ProgressBar porc="45" /> */}
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
                   <Text style={{ fontSize: 10, color: '#fff' }}>
@@ -222,7 +222,7 @@ function Perfil({ perfil, position, press, mesa }) {
                   }}
                 />
               )}
-              <ProgressBar porc="45" />
+              {/* <ProgressBar porc="45" /> */}
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
                   <Text style={{ fontSize: 10, color: '#fff' }}>
@@ -257,7 +257,7 @@ function Perfil({ perfil, position, press, mesa }) {
                   }}
                 />
               )}
-              <ProgressBar porc="45" />
+              {/* <ProgressBar porc="45" /> */}
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
                   <Text style={{ fontSize: 10, color: '#fff' }}>
@@ -292,7 +292,7 @@ function Perfil({ perfil, position, press, mesa }) {
                   }}
                 />
               )}
-              <ProgressBar porc="45" />
+              {/* <ProgressBar porc="45" /> */}
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
                   <Text style={{ fontSize: 10, color: '#fff' }}>
@@ -327,7 +327,7 @@ function Perfil({ perfil, position, press, mesa }) {
                   }}
                 />
               )}
-              <ProgressBar porc="45" />
+              {/* <ProgressBar porc="45" /> */}
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
                   <Text style={{ fontSize: 10, color: '#fff' }}>
@@ -362,7 +362,7 @@ function Perfil({ perfil, position, press, mesa }) {
                   }}
                 />
               )}
-              <ProgressBar porc="45" />
+              {/* <ProgressBar porc="45" /> */}
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
                   <Text style={{ fontSize: 10, color: '#fff' }}>
@@ -397,7 +397,7 @@ function Perfil({ perfil, position, press, mesa }) {
                   }}
                 />
               )}
-              <ProgressBar porc="45" />
+              {/* <ProgressBar porc="45" /> */}
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
                   <Text style={{ fontSize: 10, color: '#fff' }}>
@@ -432,7 +432,7 @@ function Perfil({ perfil, position, press, mesa }) {
                   }}
                 />
               )}
-              <ProgressBar porc="45" />
+              {/* <ProgressBar porc="45" /> */}
               <Card>
                 <View style={{ height: '50%', justifyContent: 'center' }}>
                   <Text style={{ fontSize: 10, color: '#fff' }}>
