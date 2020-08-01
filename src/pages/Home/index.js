@@ -43,10 +43,6 @@ function Home() {
   const [mesasAtiva, setMesasAtiva] = useState([]);
   const [mesaAtual, setMesaAtual] = useState([]);
 
-  function handleSentar(position /* , mesa, player */) {
-    console.log(`Olá, irei sentar na posição: ${position}`);
-  }
-
   function handlePosicaoMesa(mensagem) {
     let posicao = [...posicaoMesa];
     let ativo = false;
@@ -70,52 +66,61 @@ function Home() {
     });
   }
 
-  // useEffect(() => {
-  //   session = new ab.Session(
-  //     'wss://ambot.sgs.bet/websocket_poker',
-  //     function () {
-  //       console.log('ab session connected');
-  //       subscribe_to('poker');
-  //       publish_to('poker', 'tu é fei jao jao');
-  //     },
-  //     function (code, reason) {
-  //       console.log(`ab session gone ${code}`, reason);
-  //     }
-  //   );
+  useEffect(() => {
+    session = new ab.Session(
+      'wss://ambot.sgs.bet/websocket_poker',
+      function () {
+        console.log('ab session connected');
+        subscribe_to('poker');
+        publish_to('poker', 'tu é fei jao jao');
+      },
+      function (code, reason) {
+        console.log(`ab session gone ${code}`, reason);
+      }
+    );
 
-  //   subscribe_to = function (chan) {
-  //     session.subscribe(chan, function (channel, event) {
-  //       console.log(channel, event);
-  //       console.log(`-------------------------------`);
+    subscribe_to = function (chan) {
+      session.subscribe(chan, function (channel, event) {
+        console.log(channel, event);
+        console.log(`-------------------------------`);
 
-  //       const mensagem = event.split(sep);
-  //       mensagem[1] = JSON.parse(mensagem[1]);
-  //       // console.log(`Console > ${event}`)
-  //       switch (mensagem[0]) {
-  //         case `mesas`:
-  //           setMesas(mensagem[1]);
-  //           break;
-  //         case `posicaoMesa`:
-  //           handlePosicaoMesa(mensagem[1]);
-  //           break;
-  //         default:
-  //           console.log(mensagem[0]);
-  //       }
-  //     });
+        const mensagem = event.split(sep);
+        mensagem[1] = JSON.parse(mensagem[1]);
+        // console.log(`Console > ${event}`)
+        switch (mensagem[0]) {
+          case `mesas`:
+            setMesas(mensagem[1]);
+            break;
+          case `posicaoMesa`:
+            handlePosicaoMesa(mensagem[1]);
+            break;
+          default:
+            console.log(mensagem[0]);
+        }
+      });
 
-  //     publish_to = function (chan, msg) {
-  //       session.publish(chan, msg);
-  //     };
-  //   };
+      publish_to = function (chan, msg) {
+        session.publish(chan, msg);
+      };
+    };
 
-  //   setTimeout(function () {
-  //     publish_to('poker', `listarMesas${sep}`);
-  //   }, 5000);
-  // }, []);
+    setTimeout(function () {
+      publish_to('poker', `listarMesas${sep}`);
+    }, 5000);
+  }, []);
 
-  // setInterval(function () {
-  //   publish_to('poker', `ping${sep}`);
-  // }, 5000);
+  setInterval(function () {
+    publish_to('poker', `ping${sep}`);
+  }, 5000);
+
+  const nome = 'Jurema';
+  const fichas = 1500;
+
+  function handleSentar(position, mesa) {
+    const params = { mesa, nick: nome, fichas, position };
+    publish_to('poker', `entrar${sep}${JSON.stringify(params)}`);
+    console.log(`Entrei na mesa: ${mesa.id}`);
+  }
 
   function handlePressShow(mesa, i) {
     console.log(mesa);
@@ -492,6 +497,7 @@ function Home() {
                       }
                       position={1}
                       press={handleSentar}
+                      mesa={mesa}
                     />
                     <Perfil
                       perfil={
@@ -501,6 +507,7 @@ function Home() {
                       }
                       position={2}
                       press={handleSentar}
+                      mesa={mesa}
                     />
                     <Perfil
                       perfil={
@@ -510,6 +517,7 @@ function Home() {
                       }
                       position={3}
                       press={handleSentar}
+                      mesa={mesa}
                     />
                     <Perfil
                       perfil={
@@ -519,6 +527,7 @@ function Home() {
                       }
                       position={4}
                       press={handleSentar}
+                      mesa={mesa}
                     />
                     <Perfil
                       perfil={
@@ -528,6 +537,7 @@ function Home() {
                       }
                       position={5}
                       press={handleSentar}
+                      mesa={mesa}
                     />
                     <Perfil
                       perfil={
@@ -537,6 +547,7 @@ function Home() {
                       }
                       position={6}
                       press={handleSentar}
+                      mesa={mesa}
                     />
                     <Perfil
                       perfil={
@@ -546,6 +557,7 @@ function Home() {
                       }
                       position={7}
                       press={handleSentar}
+                      mesa={mesa}
                     />
                     <Perfil
                       perfil={
@@ -555,6 +567,7 @@ function Home() {
                       }
                       position={8}
                       press={handleSentar}
+                      mesa={mesa}
                     />
                     <Perfil
                       perfil={
@@ -564,6 +577,7 @@ function Home() {
                       }
                       position={9}
                       press={handleSentar}
+                      mesa={mesa}
                     />
                   </View>
                 </View>
